@@ -24,6 +24,12 @@ router.route('/add').post((req,res) => {
     newQRcode.save()
         .then(() => res.json('QR code added!'))
         .catch(err => res.status(400).json('Error: ' + err))
-})
+});
+
+router.route('/:id').get((req,res)=>{
+    QRcode.findById(req.params.id)
+        .then(qrcode => res.json(qrcode))
+        .catch(err => res.status(400).json('Error: ' + err))
+});
 
 module.exports = router
