@@ -32,4 +32,28 @@ router.route('/:id').get((req,res)=>{
         .catch(err => res.status(400).json('Error: ' + err))
 });
 
+router.route('/:id').delete((req, res) => {
+    QRcode.findByIdAndDelete(req.params.id)
+        .then(() => res.json('QR code deleted.'))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/update/:id').post((req,res) => {
+    QRcode.findById(req.params.id)
+        .then(qrcode => {
+            qrcode.username = req.body.username;
+            qrcode.description = req.body.description;
+            qrcode.code = req.body.code;
+            qrcode.date = Date.parse(req.body.date);
+
+            qrcode.save()
+                .then(() => res.json('QR code updated!'))
+                .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+
+});
+
+
+
 module.exports = router
