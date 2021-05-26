@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios'
 
 
 
@@ -27,9 +28,14 @@ export default class CreateQR extends Component{
     }
 
     componentDidMount(){
-        this.setState({
-            users: ['test user'],
-            username : 'test user'
+     axios.get('http://localhost:5000/users')
+        .then(res => {
+            if(res.data.length > 0){
+                this.setState({
+                    users: res.data.map(user => user.username),
+                    user: res.data[0].username
+                })
+            }
         })
     }
 
@@ -67,7 +73,9 @@ export default class CreateQR extends Component{
         }
 
         console.log(qrcode);
-        console.log("connection comes later!")
+
+        axios.post('http://localhost:5000/qrcodes/add', qrcode)
+           .then(res => console.log(res.data)); 
 
         window.location = '/';
     }
